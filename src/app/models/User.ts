@@ -6,5 +6,11 @@ export interface User {
       street?: string;
       city?: string;
       state?: string;
-    };
+    },
+    email: string;
+    image?: string;
+    isActive?: boolean;
+    balance?: number;
+    registered?: any;
+    hide?: boolean;
 }
