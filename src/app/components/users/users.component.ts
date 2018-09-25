@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { User } from "../../models/User";
+import { DataService } from "../../services/data.service";
 
 @Component({
   selector: "app-users",
@@ -26,87 +27,22 @@ export class UsersComponent implements OnInit {
   currentStyles: {};
   showUserForm: boolean = false;
   @ViewChild('userForm') form: any;
+  data: any;
 
-  constructor() {}
+  constructor(private dataService: DataService) {}
 
   ngOnInit() {
-    this.users = [
-      {
-        firstName: "John",
-        lastName: "Doe",
-        age: 23,
-        email: "john@gmail.com",
-        address: {
-          street: "72",
-          city: "Lahore",
-          state: "pak"
-        },
-        image: 'http://lorempixel.com/600/600/people/3',
-        isActive: true,
-        balance: 100,
-        registered: new Date('01/02/2018 08:30:00'),
-        hide: false,
-      },
-      {
-        firstName: "Kevin",
-        lastName: "Tony",
-        age: 23,
-        email: "kevin@gmail.com",
-        address: {
-          street: "34",
-          city: "Lahore",
-          state: "pak"
-        },
-        image: 'http://lorempixel.com/600/600/people/2',
-        isActive: false,
-        balance: 200,
-        registered: new Date('02/03/2018 08:30:00'),
-        hide: true,
-      },
-      {
-        firstName: "Donald",
-        lastName: "Trump",
-        age: 23,
-        email: "donald@gmail.com",
-        address: {
-          street: "26",
-          city: "Lahore",
-          state: "pak"
-        },
-        image: 'http://lorempixel.com/600/600/people/1',
-        isActive: true,
-        balance: 50,
-        registered: new Date('03/01/2018 08:30:00'),
-        hide: true,
-      }
-    ];
-    this.loaded = true;
+    this.dataService.getData().subscribe(data => {
+      console.log(data);
+    });
+    
+    this.dataService.getUsers().subscribe(users => {
+      this.users = users;
+      this.loaded = true;
+     });
 
-    // this.addUser({
-    //   firstName: "Jonny",
-    //   lastName: "Wick",
-   
-    // });
     this.setCurrentClasses();
     this.setCurrentStyles();
-  }
-
-  addUser() {
-    this.user.isActive = true;
-    this.user.registered = new Date();
-
-    this.users.unshift(this.user);
-    this.user = {
-      firstName: '',
-      lastName: '',
-      age: null,
-      email: '',
-      address: {
-        street: '',
-        city: '',
-        state: '',
-      }
-    }
   }
 
   setCurrentClasses() {
@@ -139,7 +75,8 @@ export class UsersComponent implements OnInit {
       value.isActive = true;
       value.registered = new Date();
       value.hide = false;
-      this.users.unshift(value);
+      
+      this.dataService.addUsers(value);
       this.form.reset();
     }
   }
